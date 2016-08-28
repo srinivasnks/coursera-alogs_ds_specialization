@@ -8,6 +8,10 @@ using std::cout;
 using std::swap;
 using std::pair;
 using std::make_pair;
+using namespace std;
+
+#define left_child(x)   ((2 * x) + 1)
+#define right_child(x)  ((2 * x) + 2)
 
 class HeapBuilder {
  private:
@@ -29,22 +33,52 @@ class HeapBuilder {
       cin >> data_[i];
   }
 
+  void sift_down(int i) {
+     int min_ele = data_[i];;
+     int min_index = i;
+
+     if (left_child(i) >= data_.size()) {
+        return;
+     } else if (min_ele > data_[left_child(i)]){
+        min_ele = data_[left_child(i)];
+        min_index = left_child(i);
+     }
+     if (right_child(i) < data_.size() && min_ele > data_[right_child(i)]) {
+        min_ele = data_[right_child(i)];
+        min_index = right_child(i);
+     }
+     if (min_ele != data_[i]) {
+        // We need a swap
+        swap(data_[i], data_[min_index]);
+        swaps_.push_back(make_pair(i, min_index));
+        sift_down(min_index);
+     }
+  }
+
   void GenerateSwaps() {
     swaps_.clear();
-    // The following naive implementation just sorts 
-    // the given sequence using selection sort algorithm
-    // and saves the resulting sequence of swaps.
-    // This turns the given array into a heap, 
-    // but in the worst case gives a quadratic number of swaps.
-    //
-    // TODO: replace by a more efficient implementation
-    for (int i = 0; i < data_.size(); ++i)
-      for (int j = i + 1; j < data_.size(); ++j) {
-        if (data_[i] > data_[j]) {
-          swap(data_[i], data_[j]);
-          swaps_.push_back(make_pair(i, j));
-        }
-      }
+    for (int i = (data_.size()/2) - 1; i >= 0; i--) {
+       sift_down(i);
+//       cout << "i: " << i ;
+//       min_ele = data_[i];
+//       cout << "min_ele: " << min_ele;
+//       min_index = i;
+//       cout << "min_index: " << min_index;
+//       if (min_ele > data_[left_child(i)]) {
+//          min_ele = data_[left_child(i)];
+//          min_index = left_child(i);
+//       }
+//       if (min_ele > data_[right_child(i)]) {
+//          min_ele = data_[right_child(i)];
+//          min_index = right_child(i);
+//       }
+//
+//       cout << "min_index: " << min_index;
+//       if (min_ele != data_[i]) {
+//         // We need a swap
+//         swap(data_[i], data_[min_index]);
+//         swaps_.push_back(make_pair(i, min_index));
+    }
   }
 
  public:
